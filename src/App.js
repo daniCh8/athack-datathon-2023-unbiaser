@@ -28,13 +28,21 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post(
-        "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-        { text });
+      const data = {
+        data: {
+          text_inputs: text,
+          max_length: 50,
+          num_return_sequences: 3,
+          top_k: 50,
+          top_p: 0.95,
+          do_sample: true,
+        },
+      };
+      const response = await axios.post("https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference", data);
       setResult(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setResult(null); 
+      setResult(null);
     }
   };
 
