@@ -7,7 +7,7 @@ const StyledButton = styled.button`
   margin-left: 10px;
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #0077cc;
+  background-color: #4a4a4a;
   color: white;
   border: none;
   border-radius: 5px;
@@ -15,17 +15,17 @@ const StyledButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #005fa3;
+    background-color: #2a2a2a;
   }
 
   &:disabled {
-    background-color: #ccc;
+    background-color: #cccccc;
     cursor: not-allowed;
   }
 `;
 
-const SubmitButton = ({ onClick }) => {
-  return <StyledButton onClick={onClick}>Debias!</StyledButton>;
+const SubmitButton = ({ onClick, disabled }) => {
+  return <StyledButton onClick={onClick} disabled={disabled}>Debias</StyledButton>;
 };
 
 export default SubmitButton;
