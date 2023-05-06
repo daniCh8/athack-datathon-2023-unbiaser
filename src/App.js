@@ -32,8 +32,13 @@ const ResultContainer = styled.div`
   align-items: center;
 `;
 
-const Spacer = styled.div`
-  height: 20px;
+const Spacer = styled.div`height: 40px;`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  max-width: 400px;
+  margin: 10px 0;
 `;
 
 function App() {
@@ -47,7 +52,7 @@ function App() {
   const handleTextChange = e => {
     if (!result) {
       setText(e.target.value);
-      setHighlightedText(e.target.value)
+      setHighlightedText(e.target.value);
     }
   };
 
@@ -170,7 +175,7 @@ function App() {
         );
         setResult(response.data);
         this_text = response.data[0];
-        console.log(response.data[0])
+        console.log(response.data[0]);
 
         const highlightResponse = await axios.post(
           "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
@@ -291,14 +296,17 @@ function App() {
     <Container>
       <h1>Hack the bias</h1>
       <InputBox value={text} onChange={handleTextChange} />
-      <SubmitButton onClick={handleSubmit} disabled={!text || result} />
-      <ResetButton
-        onClick={() => {
-          setResult(null);
-          setText("");
-        }}
-        disabled={!result}
-      />
+      <ButtonContainer>
+        <SubmitButton onClick={handleSubmit} disabled={!text||result} />
+        <ResetButton
+          onClick={() => {
+            setResult(null);
+            setText("");
+          }}
+          disabled={!result}
+        />
+      </ButtonContainer>
+      <Spacer />
       {result &&
         <ResultContainer>
           <CircleContainer>
