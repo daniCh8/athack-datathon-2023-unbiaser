@@ -85,8 +85,8 @@ function App() {
         : await callOpenAI(modifiedRacialBiasText);
       const isRaciallyBiased = flan
         ? racialBiasResponse.data[0] === "yes"
-        : racialBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
-      console.log(flan ? racialBiasResponse.data[0] : racialBiasResponse)
+        : racialBiasResponse.toLowerCase().includes("yes");
+      console.log(flan ? racialBiasResponse.data[0] : racialBiasResponse);
       console.log("is racially biased? " + isRaciallyBiased);
 
       resolve(isRaciallyBiased);
@@ -111,8 +111,8 @@ function App() {
         : await callOpenAI(modifiedEthnicBiasText);
       const isEthnicallyBiased = flan
         ? ethnicBiasResponse.data[0] === "yes"
-        : ethnicBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
-      console.log(flan ? ethnicBiasResponse.data[0] : ethnicBiasResponse)
+        : ethnicBiasResponse.toLowerCase().includes("yes");
+      console.log(flan ? ethnicBiasResponse.data[0] : ethnicBiasResponse);
       console.log("is ethically biased? " + isEthnicallyBiased);
 
       resolve(isEthnicallyBiased);
@@ -137,8 +137,8 @@ function App() {
         : await callOpenAI(modifiedGenderBiasText);
       const isGenderBiased = flan
         ? genderBiasResponse.data[0] === "yes"
-        : genderBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
-      console.log(flan ? genderBiasResponse.data[0] : genderBiasResponse)
+        : genderBiasResponse.toLowerCase().includes("yes");
+      console.log(flan ? genderBiasResponse.data[0] : genderBiasResponse);
       console.log("is gender biased? " + isGenderBiased);
 
       resolve(isGenderBiased);
