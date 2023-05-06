@@ -122,13 +122,20 @@ function App() {
     return new Promise(async resolve => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
-        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Be as specific as possible. ` +
+        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Be as short and specific as possible. ` +
         text;
       const highlightResponse = await callOpenAI(modifiedText);
 
       console.log(highlightResponse)
       const match = highlightResponse.match(/\[[^\]]*\]/);
-      const parsedStrings = match ? JSON.parse(match[0]) : [];
+      let parsedStrings;
+      try {
+        parsedStrings = match ? JSON.parse(match[0]) : [];
+      } catch (error) {
+        console.log("caught error" + error)
+        parsedStrings = []
+      }
+      
       const cleanedStrings = parsedStrings.map(str => str.replace(/[^a-zA-Z0-9\s]/g, ''));
 
       const newHighlightedText = highlightSentences(
@@ -249,6 +256,7 @@ function App() {
     highlightClass
   ) => {
     let highlightedText = inputText;
+    console.log("highlighting " + sentencesToHighlight + " in inputText.");
 
     sentencesToHighlight.forEach(sentence => {
       const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
