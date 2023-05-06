@@ -1,34 +1,31 @@
 import React, { useState } from "react";
-import styled from "@emotion/styled";
 import axios from "axios";
+import styled from "@emotion/styled";
 import InputBox from "./components/InputBox";
-import ResultBox from "./components/ResultBox";
 import SubmitButton from "./components/SubmitButton";
+import ResultBox from "./components/ResultBox";
+import ResetButton from "./components/ResetButton";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f5f5f5;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
+  padding: 40px;
 `;
 
 function App() {
   const [text, setText] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState(null);
 
-  const fetchData = async () => {
+  const handleTextChange = (e) => {
+    if (!result) {
+      setText(e.target.value);
+    }
+  };  
+
+  const handleSubmit = async () => {
     try {
-      const data = {
+      const response = await axios.post("https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference", {
         data: {
           text_inputs: text,
           max_length: 50,
@@ -37,39 +34,34 @@ function App() {
           top_p: 0.95,
           do_sample: true,
         },
-      };
-      const response = await axios.post("https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference", data);
+      });
+
       setResult(response.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
-      setResult(null);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (text.trim()) {
-      fetchData();
-      setSubmitted(true);
+      console.error("Error submitting text:", error);
     }
   };
 
   return (
     <Container>
-      <InputContainer>
-        <InputBox value={text} onChange={(e) => setText(e.target.value)} />
-        <SubmitButton onClick={handleSubmit} />
-      </InputContainer>
-      {submitted && (
-        <>
-          <ResultBox>
-            {/* Display metrics on the input text here */}
-            {result && result[0]}
-          </ResultBox>
-          <ResultBox>
-            {/* Display the modified version of the text here */}
-          </ResultBox>
-        </>
-      )}
+      <h1>Your App Title</h1>
+      <InputBox value={text} onChange={handleTextChange} />
+      <SubmitButton onClick={handleSubmit} disabled={!text || result} />
+      <ResetButton onClick={() => {setResult(null); setText("");}} disabled={!result} />
+      {result && (
+  <>
+    <ResultBox>
+      {result[0].split(" ").map((word, index) => (
+        <span key={index} className="fading-text" style={{ animationDelay: `${index * 0.5}s` }}>
+          {word}{" "}
+        </span>
+      ))}
+    </ResultBox>
+    <ResultBox>
+      {/* Display the modified version of the text here */}
+    </ResultBox>
+  </>
+)}
     </Container>
   );
 }
