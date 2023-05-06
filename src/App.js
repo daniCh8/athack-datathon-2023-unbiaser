@@ -44,7 +44,7 @@ function App() {
 
   return (
     <Container>
-      <h1>Your App Title</h1>
+      <h1>Hack the bias</h1>
       <InputBox value={text} onChange={handleTextChange} />
       <SubmitButton onClick={handleSubmit} disabled={!text || result} />
       <ResetButton onClick={() => {setResult(null); setText("");}} disabled={!result} />
