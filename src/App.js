@@ -41,6 +41,22 @@ const ButtonContainer = styled.div`
   margin: 10px 0;
 `;
 
+const StyledTextButton = styled.button`
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+  color: #808080;
+  cursor: pointer;
+
+  &:hover {
+    color: #606060;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 function App() {
   const [text, setText] = useState("");
   const [result, setResult] = useState(null);
@@ -48,6 +64,64 @@ function App() {
   const [ethnicBias, setEthnicBias] = useState(null);
   const [genderBias, setGenderBias] = useState(null);
   const [highlightedText, setHighlightedText] = useState(null);
+  const [boolValue, setBoolValue] = useState(false);
+
+  const handleBias = async (biasType, resText) => {
+    return new Promise(async resolve => {
+      const modifiedText =
+        `remove the ${biasType} bias from this text: ` + resText;
+      const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
+      setResult(response.data);
+      let newText = response.data[0];
+
+      const highlightResponseText =
+        `can you highlight where there is ${biasType} bias on this sentence? ` +
+        text;
+      const highlightResponse = await makeApiCall(
+        highlightResponseText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
+      );
+      const newHighlightedText = highlightSentences(
+        highlightedText,
+        [highlightResponse.data[0]],
+        `highlighted-${biasType}-bias`
+      );
+
+      resolve({ newText, newHighlightedText });
+    });
+  };
+
+  const makeApiCall = (
+    textInputs,
+    maxLength,
+    numReturnSequences,
+    topK,
+    topP,
+    doSample,
+    numBeams,
+    seed
+  ) => {
+    const axiosRequestUrl =
+      "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference";
+    const requestData = {
+      text_inputs: textInputs,
+      max_length: maxLength,
+      num_return_sequences: numReturnSequences,
+      top_k: topK,
+      top_p: topP,
+      do_sample: doSample,
+      num_beams: numBeams,
+      seed: seed,
+    };
+
+    return axios.post(axiosRequestUrl, { data: requestData });
+  };
 
   const handleTextChange = e => {
     if (!result) {
@@ -78,192 +152,60 @@ function App() {
 
       const modifiedRacialBiasText =
         "is there racism on this sentence? reply yes/no: " + text;
-      const racialBiasResponse = await axios.post(
-        "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-        {
-          data: {
-            text_inputs: modifiedRacialBiasText,
-            max_length: 80,
-            num_return_sequences: 1,
-            top_k: 20,
-            top_p: 0.95,
-            do_sample: true,
-            num_beams: 5,
-            seed: 123,
-          },
-        }
+      const racialBiasResponse = await makeApiCall(
+        modifiedRacialBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
       );
       setRacialBias(racialBiasResponse.data[0] === "yes");
-      if (racialBiasResponse.data[0] === "yes") {
-        const modifiedText =
-          "remove the racial bias from this text: " + this_text;
-        const response = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs: modifiedText, // Use the modified text for the API call
-              max_length: 50,
-              num_return_sequences: 3,
-              top_k: 50,
-              top_p: 0.95,
-              do_sample: true,
-            },
-          }
-        );
-        setResult(response.data);
-        this_text = response.data[0];
-
-        const highlightResponse = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs:
-                "can you highlight where there is racial bias on this sentence? " +
-                text,
-              max_length: 80,
-              num_return_sequences: 1,
-              top_k: 20,
-              top_p: 0.95,
-              do_sample: true,
-              num_beams: 5,
-              seed: 123,
-            },
-          }
-        );
-        setHighlightedText(
-          highlightSentences(
-            highlightedText,
-            [highlightResponse.data[0]],
-            "highlighted-racial-bias"
-          )
-        );
-      }
 
       const modifiedEthnicBiasText =
         "is there ethnic bias on this sentence? reply yes/no: " + text;
-      const ethnicBiasResponse = await axios.post(
-        "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-        {
-          data: {
-            text_inputs: modifiedEthnicBiasText,
-            max_length: 80,
-            num_return_sequences: 1,
-            top_k: 20,
-            top_p: 0.95,
-            do_sample: true,
-            num_beams: 5,
-            seed: 123,
-          },
-        }
+      const ethnicBiasResponse = await makeApiCall(
+        modifiedEthnicBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
       );
       setEthnicBias(ethnicBiasResponse.data[0] === "yes");
-      if (ethnicBiasResponse.data[0] === "yes") {
-        const modifiedText =
-          "remove the ethnic bias from this text: " + this_text;
-        const response = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs: modifiedText, // Use the modified text for the API call
-              max_length: 50,
-              num_return_sequences: 3,
-              top_k: 50,
-              top_p: 0.95,
-              do_sample: true,
-            },
-          }
-        );
-        setResult(response.data);
-        this_text = response.data[0];
-        console.log(response.data[0]);
-
-        const highlightResponse = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs:
-                "can you highlight where there is ethnic bias on this sentence? " +
-                text,
-              max_length: 80,
-              num_return_sequences: 1,
-              top_k: 20,
-              top_p: 0.95,
-              do_sample: true,
-              num_beams: 5,
-              seed: 123,
-            },
-          }
-        );
-        setHighlightedText(
-          highlightSentences(
-            highlightedText,
-            [highlightResponse.data[0]],
-            "highlighted-ethnic-bias"
-          )
-        );
-      }
 
       const modifiedGenderBiasText =
         "is there gender bias on this sentence? reply yes/no: " + text;
-      const genderBiasResponse = await axios.post(
-        "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-        {
-          data: {
-            text_inputs: modifiedGenderBiasText,
-            max_length: 80,
-            num_return_sequences: 1,
-            top_k: 20,
-            top_p: 0.95,
-            do_sample: true,
-            num_beams: 5,
-            seed: 123,
-          },
-        }
+      const genderBiasResponse = await makeApiCall(
+        modifiedGenderBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
       );
       setGenderBias(genderBiasResponse.data[0] === "yes");
-      if (genderBiasResponse.data[0] === "yes") {
-        const modifiedText =
-          "remove the gender bias from this text: " + this_text;
-        const response = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs: modifiedText, // Use the modified text for the API call
-              max_length: 50,
-              num_return_sequences: 3,
-              top_k: 50,
-              top_p: 0.95,
-              do_sample: true,
-            },
-          }
-        );
-        setResult(response.data);
-        this_text = response.data[0];
 
-        const highlightResponse = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs:
-                "can you highlight where there is gender bias on this sentence? " +
-                text,
-              max_length: 80,
-              num_return_sequences: 1,
-              top_k: 20,
-              top_p: 0.95,
-              do_sample: true,
-              num_beams: 5,
-              seed: 123,
-            },
-          }
-        );
-        setHighlightedText(
-          highlightSentences(
-            highlightedText,
-            [highlightResponse.data[0]],
-            "highlighted-gender-bias"
-          )
-        );
+      if (racialBiasResponse.data[0] === "yes") {
+        const { newText, newHighlightedText } = await handleBias("racial", this_text);
+        this_text = newText;
+        setHighlightedText(newHighlightedText);
+      }
+      if (ethnicBiasResponse.data[0] === "yes") {
+        const { newText, newHighlightedText } = await handleBias("ethnic", this_text);
+        this_text = newText;
+        setHighlightedText(newHighlightedText);
+      }
+      if (genderBiasResponse.data[0] === "yes") {
+        const { newText, newHighlightedText } = await handleBias("gender", this_text);
+        this_text = newText;
+        setHighlightedText(newHighlightedText);
       }
 
       if (
@@ -271,20 +213,8 @@ function App() {
         ethnicBiasResponse.data[0] === "no" &&
         genderBiasResponse.data[0] === "no"
       ) {
-        const modifiedText = "remove the bias from this text: " + this_text;
-        const response = await axios.post(
-          "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
-          {
-            data: {
-              text_inputs: modifiedText, // Use the modified text for the API call
-              max_length: 50,
-              num_return_sequences: 3,
-              top_k: 50,
-              top_p: 0.95,
-              do_sample: true,
-            },
-          }
-        );
+        const modifiedText = "remove the bias from this text: " + text;
+        const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
         setResult(response.data);
       }
     } catch (error) {
@@ -297,7 +227,7 @@ function App() {
       <h1>Hack the bias</h1>
       <InputBox value={text} onChange={handleTextChange} />
       <ButtonContainer>
-        <SubmitButton onClick={handleSubmit} disabled={!text||result} />
+        <SubmitButton onClick={handleSubmit} disabled={!text || result} />
         <ResetButton
           onClick={() => {
             setResult(null);
@@ -331,6 +261,9 @@ function App() {
             {result[0]}
           </ResultBox>
         </ResultContainer>}
+      <StyledTextButton onClick={() => setBoolValue(!boolValue)}>
+        {boolValue ? "Flan" : "ChatGPT"}
+      </StyledTextButton>
     </Container>
   );
 }
