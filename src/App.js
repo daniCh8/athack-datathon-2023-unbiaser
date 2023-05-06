@@ -151,7 +151,7 @@ function App() {
         `remove the ${biasType} bias from this text: ` + resText;
       const response = await makeAWSApiCall(
         modifiedText,
-        50,
+        120,
         3,
         50,
         0.95,
@@ -165,7 +165,7 @@ function App() {
         text;
       const highlightResponse = await makeAWSApiCall(
         highlightResponseText,
-        80,
+        120,
         1,
         20,
         0.95,
@@ -312,7 +312,7 @@ function App() {
           const modifiedText = "remove the bias from this text: " + text;
           const response = await makeAWSApiCall(
             modifiedText,
-            50,
+            120,
             3,
             50,
             0.95,
