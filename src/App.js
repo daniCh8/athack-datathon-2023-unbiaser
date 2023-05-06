@@ -39,6 +39,7 @@ function App() {
   const [racialBias, setRacialBias] = useState(null);
   const [ethnicBias, setEthnicBias] = useState(null);
   const [genderBias, setGenderBias] = useState(null);
+  const [highlightedText, setHighlightedText] = useState(null);
 
   const handleTextChange = e => {
     if (!result) {
@@ -46,9 +47,21 @@ function App() {
     }
   };
 
+  const highlightSentences = (inputText, sentencesToHighlight, highlightClass) => {
+    let highlightedText = inputText;
+  
+    sentencesToHighlight.forEach((sentence) => {
+      const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
+      highlightedText = highlightedText.replace(sentence, highlightedSentence);
+    });
+  
+    return highlightedText;
+  };
+  
+
   const handleSubmit = async () => {
     try {
-      const modifiedText = "Debias this text: " + text; // Prepend the characters to the input text
+      const modifiedText = "remove the bias from this text: " + text; // Prepend the characters to the input text
       const response = await axios.post(
         "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference",
         {
@@ -118,6 +131,11 @@ function App() {
       );
       setGenderBias(modifiedGenderBiasResponse.data[0] === 'yes')
       
+      const sentencesToHighlight = [text];
+      if (modifiedGenderBiasResponse.data[0] === 'yes') {
+        setHighlightedText(highlightSentences(text, sentencesToHighlight, "highlighted-gender-bias"));
+        console.log(highlightedText)
+      }
     } catch (error) {
       console.error("Error submitting text:", error);
     }
@@ -142,19 +160,12 @@ function App() {
             <StatusCircle active={ethnicBias} color="#FFD700" label="Ethnic Bias" />
             <StatusCircle active={genderBias} color="#40E0D0" label="Gender Bias" />
           </CircleContainer>
+          <ResultBox
+      children={highlightedText}
+      isHtml={true}
+    />
           <ResultBox>
-            {/* Display the modified version of the text here */}
-          </ResultBox>
-          <ResultBox>
-            {result[0].split(" ").map((word, index) =>
-              <span
-                key={index}
-                className="fading-text"
-                style={{ animationDelay: `${index * 0.5}s` }}
-              >
-                {word}{" "}
-              </span>
-            )}
+            {result[0]}
           </ResultBox>
         </ResultContainer>}
     </Container>

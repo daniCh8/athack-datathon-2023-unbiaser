@@ -17,6 +17,24 @@ const StyledBox = styled.div`
     animation: fadeIn 2s linear forwards;
   }
 
+  .highlighted-racial-bias {
+    background-color: #FF6347;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  .highlighted-ethnic-bias {
+    background-color: #FFD700;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  .highlighted-gender-bias {
+    background-color: #40E0D0;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
   @keyframes fadeInBox {
     0% {
       opacity: 0;
@@ -36,8 +54,19 @@ const StyledBox = styled.div`
   }
 `;
 
-const ResultBox = ({ children }) => {
-  return <StyledBox>{children}</StyledBox>;
+const ResultBox = ({ children, isHtml }) => {
+  return (
+    <StyledBox>
+      {isHtml ? (
+        <p
+          className="fading-text"
+          dangerouslySetInnerHTML={{ __html: children }}
+        ></p>
+      ) : (
+        <p className="fading-text">{children}</p>
+      )}
+    </StyledBox>
+  );
 };
 
 export default ResultBox;
