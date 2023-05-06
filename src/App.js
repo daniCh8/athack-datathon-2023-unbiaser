@@ -79,8 +79,7 @@ function App() {
             20,
             0.95,
             true,
-            5,
-            123
+            5
           )
         : await callOpenAI(modifiedRacialBiasText);
       const isRaciallyBiased = flan
@@ -105,8 +104,7 @@ function App() {
             20,
             0.95,
             true,
-            5,
-            123
+            5
           )
         : await callOpenAI(modifiedEthnicBiasText);
       const isEthnicallyBiased = flan
@@ -131,8 +129,7 @@ function App() {
             20,
             0.95,
             true,
-            5,
-            123
+            5
           )
         : await callOpenAI(modifiedGenderBiasText);
       const isGenderBiased = flan
@@ -155,7 +152,8 @@ function App() {
         3,
         50,
         0.95,
-        true
+        true,
+        5
       );
       setResult(response.data[0]);
       let newText = response.data[0];
@@ -170,8 +168,7 @@ function App() {
         20,
         0.95,
         true,
-        5,
-        123
+        5
       );
       const newHighlightedText = highlightSentences(
         highlightedText,
@@ -190,8 +187,7 @@ function App() {
     topK,
     topP,
     doSample,
-    numBeams,
-    seed
+    numBeams
   ) => {
     const axiosRequestUrl =
       "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference";
@@ -203,7 +199,7 @@ function App() {
       top_p: topP,
       do_sample: doSample,
       num_beams: numBeams,
-      seed: seed,
+      seed: 8,
     };
 
     return axios.post(axiosRequestUrl, { data: requestData });
@@ -316,7 +312,8 @@ function App() {
             3,
             50,
             0.95,
-            true
+            true,
+            5
           );
           setResult(response[0]);
           console.log(flan);
