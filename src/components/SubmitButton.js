@@ -12,7 +12,7 @@ const Button = styled.button`
 `;
 
 const SubmitButton = ({ onClick }) => {
-  return <Button onClick={onClick}>Submit</Button>;
+  return <Button onClick={onClick}>Debias!</Button>;
 };
 
 export default SubmitButton;
