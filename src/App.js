@@ -122,21 +122,23 @@ function App() {
     return new Promise(async resolve => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
-        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Be as short and specific as possible. ` +
+        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Each entry of the list should be a part of the text. Be as specific as possible. ` +
         text;
       const highlightResponse = await callOpenAI(modifiedText);
 
-      console.log(highlightResponse)
+      console.log(highlightResponse);
       const match = highlightResponse.match(/\[[^\]]*\]/);
       let parsedStrings;
       try {
         parsedStrings = match ? JSON.parse(match[0]) : [];
       } catch (error) {
-        console.log("caught error" + error)
-        parsedStrings = []
+        console.log("caught error" + error);
+        parsedStrings = [];
       }
-      
-      const cleanedStrings = parsedStrings.map(str => str.replace(/[^a-zA-Z0-9\s]/g, ''));
+
+      const cleanedStrings = parsedStrings.map(str =>
+        str.replace(/[^a-zA-Z0-9\s]/g, "")
+      );
 
       const newHighlightedText = highlightSentences(
         highlightedText,
@@ -257,10 +259,17 @@ function App() {
   ) => {
     let highlightedText = inputText;
     console.log("highlighting " + sentencesToHighlight + " in inputText.");
+    sentencesToHighlight = sentencesToHighlight.sort((a, b) => b.length - a.length);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(inputText, "text/html");
+    inputText = doc.body.textContent;
 
     sentencesToHighlight.forEach(sentence => {
       const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
-      highlightedText = highlightedText.replace(sentence, highlightedSentence);
+      highlightedText = highlightedText.replace(
+        new RegExp(sentence, "gi"),
+        highlightedSentence
+      );
     });
 
     return highlightedText;
