@@ -63,7 +63,7 @@ function App() {
         <>
           <ResultBox>
             {/* Display metrics on the input text here */}
-            {JSON.stringify(result)}
+            {result && result[0]}
           </ResultBox>
           <ResultBox>
             {/* Display the modified version of the text here */}
