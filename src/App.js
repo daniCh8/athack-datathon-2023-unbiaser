@@ -70,7 +70,7 @@ function App() {
     return new Promise(async resolve => {
       const modifiedRacialBiasText =
         "is there racism on this sentence? reply yes/no: " + text;
-      const racialBiasResponse = await makeApiCall(
+      const racialBiasResponse = await makeAWSApiCall(
         modifiedRacialBiasText,
         80,
         1,
@@ -90,7 +90,7 @@ function App() {
     return new Promise(async resolve => {
       const modifiedEthnicBiasText =
         "is there ethnic bias on this sentence? reply yes/no: " + text;
-      const ethnicBiasResponse = await makeApiCall(
+      const ethnicBiasResponse = await makeAWSApiCall(
         modifiedEthnicBiasText,
         80,
         1,
@@ -110,7 +110,7 @@ function App() {
     return new Promise(async resolve => {
       const modifiedGenderBiasText =
         "is there gender bias on this sentence? reply yes/no: " + text;
-      const genderBiasResponse = await makeApiCall(
+      const genderBiasResponse = await makeAWSApiCall(
         modifiedGenderBiasText,
         80,
         1,
@@ -130,14 +130,21 @@ function App() {
     return new Promise(async resolve => {
       const modifiedText =
         `remove the ${biasType} bias from this text: ` + resText;
-      const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
+      const response = await makeAWSApiCall(
+        modifiedText,
+        50,
+        3,
+        50,
+        0.95,
+        true
+      );
       setResult(response.data[0]);
       let newText = response.data[0];
 
       const highlightResponseText =
         `can you highlight where there is ${biasType} bias on this sentence? ` +
         text;
-      const highlightResponse = await makeApiCall(
+      const highlightResponse = await makeAWSApiCall(
         highlightResponseText,
         80,
         1,
@@ -157,7 +164,7 @@ function App() {
     });
   };
 
-  const makeApiCall = (
+  const makeAWSApiCall = (
     textInputs,
     maxLength,
     numReturnSequences,
@@ -181,6 +188,38 @@ function App() {
     };
 
     return axios.post(axiosRequestUrl, { data: requestData });
+  };
+
+  const callOpenAI = text => {
+    return new Promise(async (resolve, reject) => {
+      const messages = [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: text },
+      ];
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer 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`,
+      };
+
+      const data = {
+        model: "gpt-3.5-turbo",
+        messages: messages,
+        max_tokens: 500,
+      };
+
+      try {
+        const response = await axios.post(
+          "https://api.openai.com/v1/chat/completions",
+          data,
+          { headers: headers }
+        );
+        const content = response.data.choices[0].message.content;
+        resolve(content);
+      } catch (error) {
+        reject(error);
+      }
+    });
   };
 
   const handleTextChange = e => {
@@ -248,9 +287,26 @@ function App() {
         !flan ||
         (!isRaciallyBiased && !isEthnicallyBiased && !isGenderBiased)
       ) {
-        const modifiedText = "remove the bias from this text: " + text;
-        const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
-        setResult(response[0]);
+        console.log("flan: " + flan);
+        if (flan) {
+          console.log("asking flan!")
+          const modifiedText = "remove the bias from this text: " + text;
+          const response = await makeAWSApiCall(
+            modifiedText,
+            50,
+            3,
+            50,
+            0.95,
+            true
+          );
+          setResult(response[0]);
+        } else {
+          console.log("asking chatgpt!")
+          const modifiedText = "Can you remove the racial-bias, gender-bias or ethnic-bias from the following text? Keep the text structure close to the initial one and only reply with the modified text." + text;
+          const response = await callOpenAI(modifiedText);
+          setResult(response);
+          console.log(response)
+        }
       }
     } catch (error) {
       console.error("Error submitting text:", error);
@@ -297,7 +353,7 @@ function App() {
           </ResultBox>
         </ResultContainer>}
       <StyledTextButton onClick={() => setFlan(!flan)}>
-        {flan ? "Flan" : "ChatGPT"}
+        {flan ? "ChatGPT" : "Flan"}
       </StyledTextButton>
     </Container>
   );
