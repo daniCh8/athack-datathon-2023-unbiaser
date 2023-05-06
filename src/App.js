@@ -68,19 +68,26 @@ function App() {
 
   const findIfRaciallyBiased = async () => {
     return new Promise(async resolve => {
+      console.log("asking if there is a racial bias.");
       const modifiedRacialBiasText =
-        "is there racism on this sentence? reply yes/no: " + text;
-      const racialBiasResponse = await makeAWSApiCall(
-        modifiedRacialBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      const isRaciallyBiased = racialBiasResponse.data[0] === "yes";
+        "is there racism on this sentence? reply only yes/no: " + text;
+      const racialBiasResponse = flan
+        ? await makeAWSApiCall(
+            modifiedRacialBiasText,
+            80,
+            1,
+            20,
+            0.95,
+            true,
+            5,
+            123
+          )
+        : await callOpenAI(modifiedRacialBiasText);
+      const isRaciallyBiased = flan
+        ? racialBiasResponse.data[0] === "yes"
+        : racialBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
+      console.log(flan ? racialBiasResponse.data[0] : racialBiasResponse)
+      console.log("is racially biased? " + isRaciallyBiased);
 
       resolve(isRaciallyBiased);
     });
@@ -89,18 +96,24 @@ function App() {
   const findIfEthnicallyBiased = async () => {
     return new Promise(async resolve => {
       const modifiedEthnicBiasText =
-        "is there ethnic bias on this sentence? reply yes/no: " + text;
-      const ethnicBiasResponse = await makeAWSApiCall(
-        modifiedEthnicBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      const isEthnicallyBiased = ethnicBiasResponse.data[0] === "yes";
+        "is there ethnic bias on this sentence? reply only yes/no: " + text;
+      const ethnicBiasResponse = flan
+        ? await makeAWSApiCall(
+            modifiedEthnicBiasText,
+            80,
+            1,
+            20,
+            0.95,
+            true,
+            5,
+            123
+          )
+        : await callOpenAI(modifiedEthnicBiasText);
+      const isEthnicallyBiased = flan
+        ? ethnicBiasResponse.data[0] === "yes"
+        : ethnicBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
+      console.log(flan ? ethnicBiasResponse.data[0] : ethnicBiasResponse)
+      console.log("is ethically biased? " + isEthnicallyBiased);
 
       resolve(isEthnicallyBiased);
     });
@@ -109,18 +122,24 @@ function App() {
   const findIfGenderBiased = async () => {
     return new Promise(async resolve => {
       const modifiedGenderBiasText =
-        "is there gender bias on this sentence? reply yes/no: " + text;
-      const genderBiasResponse = await makeAWSApiCall(
-        modifiedGenderBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      const isGenderBiased = genderBiasResponse.data[0] === "yes";
+        "is there gender bias on this sentence? reply only yes/no: " + text;
+      const genderBiasResponse = flan
+        ? await makeAWSApiCall(
+            modifiedGenderBiasText,
+            80,
+            1,
+            20,
+            0.95,
+            true,
+            5,
+            123
+          )
+        : await callOpenAI(modifiedGenderBiasText);
+      const isGenderBiased = flan
+        ? genderBiasResponse.data[0] === "yes"
+        : genderBiasResponse.replace(/\./g, "").toLowerCase() === "yes";
+      console.log(flan ? genderBiasResponse.data[0] : genderBiasResponse)
+      console.log("is gender biased? " + isGenderBiased);
 
       resolve(isGenderBiased);
     });
@@ -289,7 +308,7 @@ function App() {
       ) {
         console.log("flan: " + flan);
         if (flan) {
-          console.log("asking flan!")
+          console.log("asking flan!");
           const modifiedText = "remove the bias from this text: " + text;
           const response = await makeAWSApiCall(
             modifiedText,
@@ -300,12 +319,15 @@ function App() {
             true
           );
           setResult(response[0]);
+          console.log(flan);
         } else {
-          console.log("asking chatgpt!")
-          const modifiedText = "Can you remove the racial-bias, gender-bias or ethnic-bias from the following text? Keep the text structure close to the initial one and only reply with the modified text." + text;
+          console.log("asking chatgpt!");
+          const modifiedText =
+            "Can you remove the racial-bias, gender-bias or ethnic-bias from the following text? Keep the text structure close to the initial one and only reply with the modified text." +
+            text;
           const response = await callOpenAI(modifiedText);
           setResult(response);
-          console.log(response)
+          console.log(response);
         }
       }
     } catch (error) {
@@ -353,7 +375,7 @@ function App() {
           </ResultBox>
         </ResultContainer>}
       <StyledTextButton onClick={() => setFlan(!flan)}>
-        {flan ? "ChatGPT" : "Flan"}
+        {flan ? "GPT-3.5" : "Flan"}
       </StyledTextButton>
     </Container>
   );
