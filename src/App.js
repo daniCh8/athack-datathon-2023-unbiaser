@@ -64,14 +64,74 @@ function App() {
   const [ethnicBias, setEthnicBias] = useState(null);
   const [genderBias, setGenderBias] = useState(null);
   const [highlightedText, setHighlightedText] = useState(null);
-  const [boolValue, setBoolValue] = useState(false);
+  const [flan, setFlan] = useState(false);
+
+  const findIfRaciallyBiased = async () => {
+    return new Promise(async resolve => {
+      const modifiedRacialBiasText =
+        "is there racism on this sentence? reply yes/no: " + text;
+      const racialBiasResponse = await makeApiCall(
+        modifiedRacialBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
+      );
+      const isRaciallyBiased = racialBiasResponse.data[0] === "yes";
+
+      resolve(isRaciallyBiased);
+    });
+  };
+
+  const findIfEthnicallyBiased = async () => {
+    return new Promise(async resolve => {
+      const modifiedEthnicBiasText =
+        "is there ethnic bias on this sentence? reply yes/no: " + text;
+      const ethnicBiasResponse = await makeApiCall(
+        modifiedEthnicBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
+      );
+      const isEthnicallyBiased = ethnicBiasResponse.data[0] === "yes";
+
+      resolve(isEthnicallyBiased);
+    });
+  };
+
+  const findIfGenderBiased = async () => {
+    return new Promise(async resolve => {
+      const modifiedGenderBiasText =
+        "is there gender bias on this sentence? reply yes/no: " + text;
+      const genderBiasResponse = await makeApiCall(
+        modifiedGenderBiasText,
+        80,
+        1,
+        20,
+        0.95,
+        true,
+        5,
+        123
+      );
+      const isGenderBiased = genderBiasResponse.data[0] === "yes";
+
+      resolve(isGenderBiased);
+    });
+  };
 
   const handleBias = async (biasType, resText) => {
     return new Promise(async resolve => {
       const modifiedText =
         `remove the ${biasType} bias from this text: ` + resText;
       const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
-      setResult(response.data);
+      setResult(response.data[0]);
       let newText = response.data[0];
 
       const highlightResponseText =
@@ -150,72 +210,47 @@ function App() {
       let this_text = text;
       setHighlightedText(text);
 
-      const modifiedRacialBiasText =
-        "is there racism on this sentence? reply yes/no: " + text;
-      const racialBiasResponse = await makeApiCall(
-        modifiedRacialBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      setRacialBias(racialBiasResponse.data[0] === "yes");
+      const isRaciallyBiased = await findIfRaciallyBiased();
+      setRacialBias(isRaciallyBiased);
 
-      const modifiedEthnicBiasText =
-        "is there ethnic bias on this sentence? reply yes/no: " + text;
-      const ethnicBiasResponse = await makeApiCall(
-        modifiedEthnicBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      setEthnicBias(ethnicBiasResponse.data[0] === "yes");
+      const isEthnicallyBiased = await findIfEthnicallyBiased();
+      setEthnicBias(isEthnicallyBiased);
 
-      const modifiedGenderBiasText =
-        "is there gender bias on this sentence? reply yes/no: " + text;
-      const genderBiasResponse = await makeApiCall(
-        modifiedGenderBiasText,
-        80,
-        1,
-        20,
-        0.95,
-        true,
-        5,
-        123
-      );
-      setGenderBias(genderBiasResponse.data[0] === "yes");
+      const isGenderBiased = await findIfGenderBiased();
+      setGenderBias(isGenderBiased);
 
-      if (racialBiasResponse.data[0] === "yes") {
-        const { newText, newHighlightedText } = await handleBias("racial", this_text);
+      if (isRaciallyBiased) {
+        const { newText, newHighlightedText } = await handleBias(
+          "racial",
+          this_text
+        );
         this_text = newText;
         setHighlightedText(newHighlightedText);
       }
-      if (ethnicBiasResponse.data[0] === "yes") {
-        const { newText, newHighlightedText } = await handleBias("ethnic", this_text);
+      if (isEthnicallyBiased) {
+        const { newText, newHighlightedText } = await handleBias(
+          "ethnic",
+          this_text
+        );
         this_text = newText;
         setHighlightedText(newHighlightedText);
       }
-      if (genderBiasResponse.data[0] === "yes") {
-        const { newText, newHighlightedText } = await handleBias("gender", this_text);
+      if (isGenderBiased) {
+        const { newText, newHighlightedText } = await handleBias(
+          "gender",
+          this_text
+        );
         this_text = newText;
         setHighlightedText(newHighlightedText);
       }
 
       if (
-        racialBiasResponse.data[0] === "no" &&
-        ethnicBiasResponse.data[0] === "no" &&
-        genderBiasResponse.data[0] === "no"
+        !flan ||
+        (!isRaciallyBiased && !isEthnicallyBiased && !isGenderBiased)
       ) {
         const modifiedText = "remove the bias from this text: " + text;
         const response = await makeApiCall(modifiedText, 50, 3, 50, 0.95, true);
-        setResult(response.data);
+        setResult(response[0]);
       }
     } catch (error) {
       console.error("Error submitting text:", error);
@@ -258,11 +293,11 @@ function App() {
           </CircleContainer>
           <ResultBox children={highlightedText} isHtml={true} />
           <ResultBox>
-            {result[0]}
+            {result}
           </ResultBox>
         </ResultContainer>}
-      <StyledTextButton onClick={() => setBoolValue(!boolValue)}>
-        {boolValue ? "Flan" : "ChatGPT"}
+      <StyledTextButton onClick={() => setFlan(!flan)}>
+        {flan ? "Flan" : "ChatGPT"}
       </StyledTextButton>
     </Container>
   );
