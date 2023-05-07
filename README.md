@@ -5,6 +5,8 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 ## Table of Contents
 - [Features](#features)
 - [Video Demo](#video-demo)
+  - [Mobile](#mobile)
+  - [Desktop](#desktop)
 - [Live Demo](#live-demo)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -18,7 +20,13 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 
 ## Video Demo
 
-![An example of the unbiaser in action.](/assets/sample-unbiaser.gif)
+### Mobile
+
+![An example of the unbiaser in action on the mobile website.](/assets/sample-unbiaser-mobile.gif)
+
+### Desktop
+
+![An example of the unbiaser in action on the desktop website.](/assets/sample-unbiaser-desktop.gif)
 
 ## Live Demo
 
