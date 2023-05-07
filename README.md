@@ -22,7 +22,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 
 ### Mobile
 
-![An example of the unbiaser in action on the mobile website.](/assets/sample-unbiaser-mobile.gif)
+<img src="/assets/sample-unbiaser-mobile.gif" width="500">
 
 ### Desktop
 
