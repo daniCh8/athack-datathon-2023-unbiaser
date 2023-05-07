@@ -16,7 +16,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
   - [GPT-3.5 on OpenAI](#gpt-35-on-openai)
   - [Local Environment Example](#local-environment-example)
   - [Start the development server](#start-the-development-server)
-- [Evaluation Notebook](#evaulation-notebook)
+- [Evaluation Notebook](#evaluation-notebook)
   - [Evaluation Data](#evaluation-data)
 - [Built With](#built-with)
 
@@ -99,7 +99,7 @@ npm start
 
 ## Evaluation Notebook
 
-This notebook contains code for evaluating the models using the [CrowS-Pairs Challenge](https://github.com/nyu-mll/crows-pairs) Dataset to measure the performance in identifying and debiasing sentences with gender, race, and ethnicity biases, with different input prompts.
+The [evaulation_notebook.ipynb](/scripts/evaluation_notebook.ipynb) contains code for evaluating the models using the [CrowS-Pairs Challenge](https://github.com/nyu-mll/crows-pairs) Dataset to measure the performance in identifying and debiasing sentences with gender, race, and ethnicity biases, with different input prompts.
 
 Notebook overview:
 The `ModelValidation` class performs the following tasks:
