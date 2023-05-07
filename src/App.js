@@ -218,7 +218,7 @@ function App() {
     numBeams
   ) => {
     const axiosRequestUrl =
-      "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference";
+      `${process.env.REACT_APP_AWS_ENDPOINT}`;
     const requestData = {
       text_inputs: textInputs,
       max_length: maxLength,
@@ -242,7 +242,7 @@ function App() {
 
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${""}`,
+        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
       };
 
       const data = {
