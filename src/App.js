@@ -6,6 +6,7 @@ import SubmitButton from "./components/SubmitButton";
 import ResultBox from "./components/ResultBox";
 import ResetButton from "./components/ResetButton";
 import StatusCircle from "./components/StatusCircle";
+import logo from './assets/logo.png'
 
 const Container = styled.div`
   display: flex;
@@ -373,7 +374,8 @@ function App() {
 
   return (
     <Container>
-      <h1>Hack the bias</h1>
+      <img src={logo} alt="Hack The Bias Logo" style={{ width: '100%', maxWidth: '400px', height: 'auto' }}/>
+      <Spacer/>
       <InputBox value={text} onChange={handleTextChange} />
       <ButtonContainer>
         <SubmitButton onClick={handleSubmit} disabled={!text || result} />
@@ -410,7 +412,7 @@ function App() {
             {result}
           </ResultBox>
         </ResultContainer>}
-        <Spacer />
+        {result && <Spacer />}
         <div>
         <StyledTextButton
           onClick={handleGptClick}
