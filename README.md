@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# Athack @ [Datadays 2023](https://www.datadays.ch/): Hack The Bias
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Hack The Bias repository! This project was created for the Datadays 2023 AI Hackathon, organized by the Analytics Club at ETH. Our goal is to help users identify and remove biases from their text in order to promote fair and inclusive language. By providing your text, our website generates a new version that is free from racial, ethnical, and gender biases. Additionally, it highlights the specific parts of your input text related to each category of bias.
 
-## Available Scripts
+## Table of Contents
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+  - [Flan instance on AWS SageMaker](#flan-instance-on-aws-sagemaker)
+  - [GPT-3.5 on OpenAI](#gpt-35-on-openai)
+  - [Start the development server](#start-the-development-server)
+- [Built With](#built-with)
+- [Live Demo](#live-demo)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Text input with bias identification and highlighting
+- Choice between two AI models: Flan instance on AWS SageMaker or GPT-3.5 on OpenAI
+- Bias categories: Racial, Ethnical, and Gender
+- React-based website hosted on Vercel
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To get started with the project, follow the instructions below.
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Ensure you have the following installed on your local machine:
 
-### `npm run build`
+- Node.js (version 14.x or later)
+- npm (version 6.x or later)
+- Git
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repo.
+2. Change into the project directory:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+cd athack-datathon-2023-web-app
+```
 
-### `npm run eject`
+3. Install dependencies:
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+There are two alternatives for text generation: using a Flan instance deployed on AWS SageMaker or using GPT-3.5 on OpenAI. The website provides a switcher by default, but the endpoints and api keys have to be available. See below to understand how to do that.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Flan instance on AWS SageMaker
 
-## Learn More
+We've built a pipeline using AWS Lambda and AWS API Gateway to make our Flan instance reachable from the website. To use this option, you should do the same, and provide the endpoint. Don't forget to enable CORS on the API Gateway. You should set the endpoint link at line 217 of [App.js](/src/App.js).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### GPT-3.5 on OpenAI
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To use GPT-3.5 for text generation, you'll need an OpenAI API key. You should set it up at line 241 of [App.js](/src/App.js).
 
-### Code Splitting
+### Start the development server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Built With
 
-### Making a Progressive Web App
+- [React](https://reactjs.org/) - Frontend framework
+- [AWS SageMaker](https://aws.amazon.com/sagemaker/) - Machine learning platform
+- [AWS Lambda](https://aws.amazon.com/lambda/) - Serverless compute service
+- [AWS API Gateway](https://aws.amazon.com/api-gateway/) - API management service
+- [OpenAI](https://www.openai.com/) - AI research organization
+- [Vercel](https://vercel.com/) - Website hosting platform
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Live Demo
 
-### Advanced Configuration
+You can access the live demo of the Unbiased Text Generator at the following public endpoint:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[https://athack-datathon-2023-web-app.vercel.app/](https://athack-datathon-2023-web-app.vercel.app/)
