@@ -79,15 +79,11 @@ function App() {
   const handleFlanClick = () => {
     setFlan(true);
     onClear();
-    console.log("process.env.REACT_APP_OPENAI_KEY: " + process.env.REACT_APP_OPENAI_KEY)
-    console.log("process.env.REACT_APP_AWS_ENDPOINT: " + process.env.REACT_APP_AWS_ENDPOINT)
   };
 
   const handleGptClick = () => {
     setFlan(false);
     onClear();
-    console.log("process.env.REACT_APP_OPENAI_KEY: " + process.env.REACT_APP_OPENAI_KEY)
-    console.log("process.env.REACT_APP_AWS_ENDPOINT: " + process.env.REACT_APP_AWS_ENDPOINT)
   };
 
   const findIfRaciallyBiased = async () => {

@@ -10,6 +10,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 - [Usage](#usage)
   - [Flan instance on AWS SageMaker](#flan-instance-on-aws-sagemaker)
   - [GPT-3.5 on OpenAI](#gpt-35-on-openai)
+  - [Local Environment Example](#local-environment-example)
   - [Start the development server](#start-the-development-server)
 - [Built With](#built-with)
 - [Live Demo](#live-demo)
@@ -54,11 +55,20 @@ There are two alternatives for text generation: using a Flan instance deployed o
 
 ### Flan instance on AWS SageMaker
 
-We've built a pipeline using AWS Lambda and AWS API Gateway to make our Flan instance reachable from the website. To use this option, you should do the same, and provide the endpoint. Don't forget to enable CORS on the API Gateway. You should set the endpoint link at line 217 of [App.js](/src/App.js).
+We've built a pipeline using AWS Lambda and AWS API Gateway to make our Flan instance reachable from the website. To use this option, you should do the same, and provide the endpoint. Don't forget to enable CORS on the API Gateway. You should set the environment variable `REACT_APP_OPENAI_KEY`, as shown in line 216 of [App.js](/src/App.js).
 
 ### GPT-3.5 on OpenAI
 
-To use GPT-3.5 for text generation, you'll need an OpenAI API key. You should set it up at line 241 of [App.js](/src/App.js).
+To use GPT-3.5 for text generation, you'll need an OpenAI API key. You should set up the environment variable `REACT_APP_OPENAI_KEY` at line 240 of [App.js](/src/App.js).
+
+### Local Environment Example
+
+You can set up your own local environment by creating a `.env.local` file and put it in the root folder of the project. Below is an example of the local environment file:
+
+```bash
+REACT_APP_OPENAI_KEY = <your-openai-key>
+REACT_APP_AWS_ENDPOINT = <your-aws-endpoint>
+```
 
 ### Start the development server
 
