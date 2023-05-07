@@ -6,7 +6,7 @@ import SubmitButton from "./components/SubmitButton";
 import ResultBox from "./components/ResultBox";
 import ResetButton from "./components/ResetButton";
 import StatusCircle from "./components/StatusCircle";
-import logo from './assets/logo.png'
+import logo from "./assets/logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -67,12 +67,23 @@ function App() {
   const [highlightedText, setHighlightedText] = useState(null);
   const [flan, setFlan] = useState(false);
 
+  const onClear = () => {
+    setResult(null);
+    setText("");
+    setRacialBias(null);
+    setEthnicBias(null);
+    setGenderBias(null);
+    setHighlightedText(null);
+  };
+
   const handleFlanClick = () => {
     setFlan(true);
+    onClear();
   };
 
   const handleGptClick = () => {
     setFlan(false);
+    onClear();
   };
 
   const findIfRaciallyBiased = async () => {
@@ -264,14 +275,13 @@ function App() {
   ) => {
     let highlightedText = inputText;
     console.log("highlighting " + sentencesToHighlight + " in " + inputText);
-    sentencesToHighlight = sentencesToHighlight.sort((a, b) => b.length - a.length);
+    sentencesToHighlight = sentencesToHighlight.sort(
+      (a, b) => b.length - a.length
+    );
 
     sentencesToHighlight.forEach(sentence => {
       const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
-      highlightedText = highlightedText.replace(
-        sentence,
-        highlightedSentence
-      );
+      highlightedText = highlightedText.replace(sentence, highlightedSentence);
     });
 
     return highlightedText;
@@ -301,10 +311,13 @@ function App() {
           this_text = newText;
           thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("racial", thisHighlightedText);
-          thisHighlightedText = newHighlightedText
+          const newHighlightedText = await handleBiasGPT(
+            "racial",
+            thisHighlightedText
+          );
+          thisHighlightedText = newHighlightedText;
         }
-        console.log("this highlighted text: " + thisHighlightedText)
+        console.log("this highlighted text: " + thisHighlightedText);
       }
       if (isEthnicallyBiased) {
         if (flan) {
@@ -316,10 +329,13 @@ function App() {
           this_text = newText;
           thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("ethnic", thisHighlightedText);
+          const newHighlightedText = await handleBiasGPT(
+            "ethnic",
+            thisHighlightedText
+          );
           thisHighlightedText = newHighlightedText;
         }
-        console.log("this highlighted text: " + thisHighlightedText)
+        console.log("this highlighted text: " + thisHighlightedText);
       }
       if (isGenderBiased) {
         if (flan) {
@@ -331,17 +347,18 @@ function App() {
           this_text = newText;
           thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("gender", thisHighlightedText);
+          const newHighlightedText = await handleBiasGPT(
+            "gender",
+            thisHighlightedText
+          );
           thisHighlightedText = newHighlightedText;
         }
-        console.log("this highlighted text: " + thisHighlightedText)
+        console.log("this highlighted text: " + thisHighlightedText);
       }
-      console.log("this highlighted text: " + thisHighlightedText)
-      setHighlightedText(thisHighlightedText)
+      console.log("this highlighted text: " + thisHighlightedText);
+      setHighlightedText(thisHighlightedText);
 
-      if (
-        !flan && (isRaciallyBiased || isEthnicallyBiased || isGenderBiased)
-      ) {
+      if (!flan && (isRaciallyBiased || isEthnicallyBiased || isGenderBiased)) {
         console.log("flan: " + flan);
         if (flan) {
           console.log("asking flan!");
@@ -374,18 +391,16 @@ function App() {
 
   return (
     <Container>
-      <img src={logo} alt="Hack The Bias Logo" style={{ width: '100%', maxWidth: '400px', height: 'auto' }}/>
-      <Spacer/>
+      <img
+        src={logo}
+        alt="Hack The Bias Logo"
+        style={{ width: "100%", maxWidth: "400px", height: "auto" }}
+      />
+      <Spacer />
       <InputBox value={text} onChange={handleTextChange} />
       <ButtonContainer>
         <SubmitButton onClick={handleSubmit} disabled={!text || result} />
-        <ResetButton
-          onClick={() => {
-            setResult(null);
-            setText("");
-          }}
-          disabled={!result}
-        />
+        <ResetButton onClick={onClear} disabled={!result} />
       </ButtonContainer>
       <Spacer />
       {result &&
@@ -412,8 +427,8 @@ function App() {
             {result}
           </ResultBox>
         </ResultContainer>}
-        {result && <Spacer />}
-        <div>
+      {result && <Spacer />}
+      <div>
         <StyledTextButton
           onClick={handleGptClick}
           style={{ fontWeight: flan ? "normal" : "bold" }}
