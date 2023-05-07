@@ -17,7 +17,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 ## Features
 
 - Text input with bias identification and highlighting
-- Choice between two AI models: Flan instance on AWS SageMaker or GPT-3.5 on OpenAI
+- Choice between two AI models: `Flan` on AWS SageMaker or `GPT-3.5` on OpenAI
 - Bias categories: Racial, Ethnical, and Gender
 - React-based website hosted on Vercel
 
