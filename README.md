@@ -4,6 +4,8 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 
 ## Table of Contents
 - [Features](#features)
+- [Video Demo](#video-demo)
+- [Live Demo](#live-demo)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -13,7 +15,16 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
   - [Local Environment Example](#local-environment-example)
   - [Start the development server](#start-the-development-server)
 - [Built With](#built-with)
-- [Live Demo](#live-demo)
+
+## Video Demo
+
+![An example of the unbiaser in action.](/assets/sample-unbiaser.gif)
+
+## Live Demo
+
+You can access the live demo of the Unbiased Text Generator at the following public endpoint:
+
+[https://athack-datathon-2023-web-app.vercel.app/](https://athack-datathon-2023-web-app.vercel.app/)
 
 ## Features
 
@@ -85,9 +96,3 @@ npm start
 - [AWS API Gateway](https://aws.amazon.com/api-gateway/) - API management service
 - [OpenAI](https://www.openai.com/) - AI research organization
 - [Vercel](https://vercel.com/) - Website hosting platform
-
-## Live Demo
-
-You can access the live demo of the Unbiased Text Generator at the following public endpoint:
-
-[https://athack-datathon-2023-web-app.vercel.app/](https://athack-datathon-2023-web-app.vercel.app/)
