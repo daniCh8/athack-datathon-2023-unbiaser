@@ -179,7 +179,6 @@ function App() {
         true,
         5
       );
-      setResult(response.data[0]);
       let newText = response.data[0];
 
       const highlightResponseText =
@@ -289,7 +288,7 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      let this_text = text;
+      let thisText = text;
       let thisHighlightedText = text;
 
       const isRaciallyBiased = await findIfRaciallyBiased();
@@ -305,10 +304,10 @@ function App() {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "racial",
-            this_text,
+            thisText,
             thisHighlightedText
           );
-          this_text = newText;
+          thisText = newText;
           thisHighlightedText = newHighlightedText;
         } else {
           const newHighlightedText = await handleBiasGPT(
@@ -323,10 +322,10 @@ function App() {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "ethnic",
-            this_text,
+            thisText,
             thisHighlightedText
           );
-          this_text = newText;
+          thisText = newText;
           thisHighlightedText = newHighlightedText;
         } else {
           const newHighlightedText = await handleBiasGPT(
@@ -341,10 +340,10 @@ function App() {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "gender",
-            this_text,
+            thisText,
             thisHighlightedText
           );
-          this_text = newText;
+          thisText = newText;
           thisHighlightedText = newHighlightedText;
         } else {
           const newHighlightedText = await handleBiasGPT(
@@ -359,31 +358,15 @@ function App() {
       setHighlightedText(thisHighlightedText);
 
       if (!flan && (isRaciallyBiased || isEthnicallyBiased || isGenderBiased)) {
-        console.log("flan: " + flan);
-        if (flan) {
-          console.log("asking flan!");
-          const modifiedText = "remove the bias from this text: " + text;
-          const response = await makeAWSApiCall(
-            modifiedText,
-            120,
-            3,
-            50,
-            0.95,
-            true,
-            5
-          );
-          setResult(response[0]);
-          console.log(flan);
-        } else {
-          console.log("asking chatgpt!");
-          const modifiedText =
-            "Can you remove the racial-bias, gender-bias or ethnic-bias from the following text? Keep the text structure close to the initial one and only reply with the modified text." +
-            text;
-          const response = await callOpenAI(modifiedText);
-          setResult(response);
-          console.log(response);
-        }
+        console.log("asking chatgpt!");
+        const modifiedText =
+          "Can you remove the racial-bias, gender-bias or ethnic-bias from the following text? Keep the text structure close to the initial one and only reply with the modified text." +
+          text;
+        const response = await callOpenAI(modifiedText);
+        thisText = response;
+        console.log(response);
       }
+      setResult(thisText);
     } catch (error) {
       console.error("Error submitting text:", error);
     }
