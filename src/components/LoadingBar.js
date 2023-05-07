@@ -1,25 +1,30 @@
 import React from "react";
+import styled from "@emotion/styled";
+
+const LoadingBarContainer = styled.div`
+  width: 100%;
+  height: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ddd;
+  z-index: 9999;
+
+  @media only screen and (max-width: 600px) {
+    position: absolute;
+  }
+`;
+
+const ProgressBar = styled.div`
+  height: 100%;
+  background-color: #4caf50;
+  width: ${({ progress }) => progress}%;
+`;
 
 const LoadingBar = ({ progress }) => (
-  <div
-    style={{
-      width: "100%",
-      height: "5px",
-      position: "fixed",
-      top: 0,
-      left: 0,
-      backgroundColor: "#ddd",
-      zIndex: 9999,
-    }}
-  >
-    <div
-      style={{
-        height: "100%",
-        backgroundColor: "#4caf50",
-        width: `${progress}%`,
-      }}
-    ></div>
-  </div>
+  <LoadingBarContainer>
+    <ProgressBar progress={progress} />
+  </LoadingBarContainer>
 );
 
 export default LoadingBar;

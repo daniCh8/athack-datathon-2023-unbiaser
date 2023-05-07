@@ -34,7 +34,9 @@ const ResultContainer = styled.div`
   align-items: center;
 `;
 
-const Spacer = styled.div`height: 30px;`;
+const Spacer = styled.div`
+  height: 30px;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -90,7 +92,7 @@ function App() {
   };
 
   const findIfRaciallyBiased = async () => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       console.log("asking if there is a racial bias.");
       const modifiedRacialBiasText =
         "is there racism on this sentence? reply only yes/no: " + text;
@@ -108,7 +110,7 @@ function App() {
   };
 
   const findIfEthnicallyBiased = async () => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const modifiedEthnicBiasText =
         "is there ethnic bias on this sentence? reply only yes/no: " + text;
       const ethnicBiasResponse = flan
@@ -125,7 +127,7 @@ function App() {
   };
 
   const findIfGenderBiased = async () => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const modifiedGenderBiasText =
         "is there gender bias on this sentence? reply only yes/no: " + text;
       const genderBiasResponse = flan
@@ -142,7 +144,7 @@ function App() {
   };
 
   const handleBiasGPT = async (biasType, thisHighlightedText) => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
         `Return a list of the specific parts of the text that contain ${biasType} bias. Your response must be a javascript parsable list, with square brackets at the beginning and end and no additional text. Each entry of the list should be an exact piece of the text as little as possible. ` +
@@ -170,7 +172,7 @@ function App() {
   };
 
   const handleBias = async (biasType, resText, thisHighlightedText) => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const modifiedText =
         `remove the ${biasType} bias from this text: ` + resText;
       const response = await makeAWSApiCall(
@@ -231,7 +233,7 @@ function App() {
     return axios.post(axiosRequestUrl, { data: requestData });
   };
 
-  const callOpenAI = text => {
+  const callOpenAI = (text) => {
     return new Promise(async (resolve, reject) => {
       const messages = [
         { role: "system", content: "You are a helpful assistant." },
@@ -240,7 +242,7 @@ function App() {
 
       const headers = {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${"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"}`,
+        Authorization: `Bearer ${""}`,
       };
 
       const data = {
@@ -263,7 +265,7 @@ function App() {
     });
   };
 
-  const handleTextChange = e => {
+  const handleTextChange = (e) => {
     if (!result) {
       setText(e.target.value);
       setHighlightedText(e.target.value);
@@ -281,7 +283,7 @@ function App() {
       (a, b) => b.length - a.length
     );
 
-    sentencesToHighlight.forEach(sentence => {
+    sentencesToHighlight.forEach((sentence) => {
       const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
       highlightedText = highlightedText.replace(sentence, highlightedSentence);
     });
@@ -377,8 +379,8 @@ function App() {
         console.log(response);
       }
       setResult(thisText);
-      setLoadingProgress(100)
-      setLoading(false)
+      setLoadingProgress(100);
+      setLoading(false);
     } catch (error) {
       console.error("Error submitting text:", error);
     }
@@ -409,7 +411,7 @@ function App() {
       </ButtonContainer>
       <Spacer />
       {loading && <LoadingBar progress={loadingProgress} />}
-      {result &&
+      {result && (
         <ResultContainer>
           <CircleContainer>
             <StatusCircle
@@ -429,10 +431,9 @@ function App() {
             />
           </CircleContainer>
           <ResultBox children={highlightedText} isHtml={true} />
-          <ResultBox>
-            {result}
-          </ResultBox>
-        </ResultContainer>}
+          <ResultBox>{result}</ResultBox>
+        </ResultContainer>
+      )}
       {result && <Spacer />}
       <div>
         <StyledTextButton
