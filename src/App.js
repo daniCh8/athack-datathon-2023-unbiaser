@@ -95,7 +95,7 @@ function App() {
         ? ethnicBiasResponse.data[0] === "yes"
         : ethnicBiasResponse.toLowerCase().includes("yes");
       console.log(flan ? ethnicBiasResponse.data[0] : ethnicBiasResponse);
-      console.log("is ethically biased? " + isEthnicallyBiased);
+      console.log("is ethnically biased? " + isEthnicallyBiased);
 
       resolve(isEthnicallyBiased);
     });
@@ -118,11 +118,11 @@ function App() {
     });
   };
 
-  const handleBiasGPT = async biasType => {
+  const handleBiasGPT = async (biasType, thisHighlightedText) => {
     return new Promise(async resolve => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
-        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Each entry of the list should be a part of the text. Be as specific as possible. ` +
+        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Each entry of the list should be a part of the text as little as possible. ` +
         text;
       const highlightResponse = await callOpenAI(modifiedText);
 
@@ -136,13 +136,9 @@ function App() {
         parsedStrings = [];
       }
 
-      const cleanedStrings = parsedStrings.map(str =>
-        str.replace(/[^a-zA-Z0-9\s]/g, "")
-      );
-
       const newHighlightedText = highlightSentences(
-        highlightedText,
-        cleanedStrings,
+        thisHighlightedText,
+        parsedStrings,
         `highlighted-${biasType}-bias`
       );
 
@@ -150,7 +146,7 @@ function App() {
     });
   };
 
-  const handleBias = async (biasType, resText) => {
+  const handleBias = async (biasType, resText, thisHighlightedText) => {
     return new Promise(async resolve => {
       const modifiedText =
         `remove the ${biasType} bias from this text: ` + resText;
@@ -179,7 +175,7 @@ function App() {
         5
       );
       const newHighlightedText = highlightSentences(
-        highlightedText,
+        thisHighlightedText,
         [highlightResponse.data[0]],
         `highlighted-${biasType}-bias`
       );
@@ -258,16 +254,13 @@ function App() {
     highlightClass
   ) => {
     let highlightedText = inputText;
-    console.log("highlighting " + sentencesToHighlight + " in inputText.");
+    console.log("highlighting " + sentencesToHighlight + " in " + inputText);
     sentencesToHighlight = sentencesToHighlight.sort((a, b) => b.length - a.length);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(inputText, "text/html");
-    inputText = doc.body.textContent;
 
     sentencesToHighlight.forEach(sentence => {
       const highlightedSentence = `<span class="${highlightClass}">${sentence}</span>`;
       highlightedText = highlightedText.replace(
-        new RegExp(sentence, "gi"),
+        sentence,
         highlightedSentence
       );
     });
@@ -278,7 +271,7 @@ function App() {
   const handleSubmit = async () => {
     try {
       let this_text = text;
-      setHighlightedText(text);
+      let thisHighlightedText = text;
 
       const isRaciallyBiased = await findIfRaciallyBiased();
       setRacialBias(isRaciallyBiased);
@@ -293,41 +286,49 @@ function App() {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "racial",
-            this_text
+            this_text,
+            thisHighlightedText
           );
           this_text = newText;
-          setHighlightedText(newHighlightedText);
+          thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("racial");
-          setHighlightedText(newHighlightedText);
+          const newHighlightedText = await handleBiasGPT("racial", thisHighlightedText);
+          thisHighlightedText = newHighlightedText
         }
+        console.log("this highlighted text: " + thisHighlightedText)
       }
       if (isEthnicallyBiased) {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "ethnic",
-            this_text
+            this_text,
+            thisHighlightedText
           );
           this_text = newText;
-          setHighlightedText(newHighlightedText);
+          thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("ethnic");
-          setHighlightedText(newHighlightedText);
+          const newHighlightedText = await handleBiasGPT("ethnic", thisHighlightedText);
+          thisHighlightedText = newHighlightedText;
         }
+        console.log("this highlighted text: " + thisHighlightedText)
       }
       if (isGenderBiased) {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
             "gender",
-            this_text
+            this_text,
+            thisHighlightedText
           );
           this_text = newText;
-          setHighlightedText(newHighlightedText);
+          thisHighlightedText = newHighlightedText;
         } else {
-          const newHighlightedText = await handleBiasGPT("gender");
-          setHighlightedText(newHighlightedText);
+          const newHighlightedText = await handleBiasGPT("gender", thisHighlightedText);
+          thisHighlightedText = newHighlightedText;
         }
+        console.log("this highlighted text: " + thisHighlightedText)
       }
+      console.log("this highlighted text: " + thisHighlightedText)
+      setHighlightedText(thisHighlightedText)
 
       if (
         !flan ||
