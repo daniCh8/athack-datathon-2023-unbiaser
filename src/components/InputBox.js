@@ -24,7 +24,7 @@ const InputBox = ({ value, onChange }) => {
   return (
     <StyledInput
       type="text"
-      placeholder="Write the text to de-bias here..."
+      placeholder="Write the text to unbias here..."
       value={value}
       onChange={onChange}
     />
