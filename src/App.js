@@ -7,6 +7,7 @@ import ResultBox from "./components/ResultBox";
 import ResetButton from "./components/ResetButton";
 import StatusCircle from "./components/StatusCircle";
 import logo from "./assets/logo.png";
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Container = styled.div`
   display: flex;
@@ -66,6 +67,7 @@ function App() {
   const [genderBias, setGenderBias] = useState(null);
   const [highlightedText, setHighlightedText] = useState(null);
   const [flan, setFlan] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onClear = () => {
     setResult(null);
@@ -213,7 +215,7 @@ function App() {
     numBeams
   ) => {
     const axiosRequestUrl =
-      `${process.env.REACT_APP_AWS_ENDPOINT}`;
+      "https://i4c1mz81dj.execute-api.us-east-1.amazonaws.com/dev/flan-inference";
     const requestData = {
       text_inputs: textInputs,
       max_length: maxLength,
@@ -237,7 +239,7 @@ function App() {
 
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
+        Authorization: "Bearer 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",
       };
 
       const data = {
@@ -372,6 +374,18 @@ function App() {
     }
   };
 
+  const handleSubmitLoader = async () => {
+    setLoading(true);
+
+    try {
+      await handleSubmit();
+    } catch (error) {
+      console.error('Error occurred during the handleSubmit() method:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Container>
       <img
@@ -382,10 +396,11 @@ function App() {
       <Spacer />
       <InputBox value={text} onChange={handleTextChange} />
       <ButtonContainer>
-        <SubmitButton onClick={handleSubmit} disabled={!text || result} />
+        <SubmitButton onClick={handleSubmitLoader} disabled={!text || result} />
         <ResetButton onClick={onClear} disabled={!result} />
       </ButtonContainer>
       <Spacer />
+      {loading && <LinearProgress />}
       {result &&
         <ResultContainer>
           <CircleContainer>
