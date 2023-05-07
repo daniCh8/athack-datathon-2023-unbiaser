@@ -20,7 +20,7 @@ const CircleContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 20px 0;
-  width: 75%;
+  width: 85%;
   max-width: 600px;
   padding: 0 15px;
 `;
@@ -142,7 +142,7 @@ function App() {
     return new Promise(async resolve => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
-        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response must be a javascript parsable list, and no additional text. Each entry of the list should be an exact piece of the text as little as possible. ` +
+        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response must be a javascript parsable list, with square brackets at the beginning and end and no additional text. Each entry of the list should be an exact piece of the text as little as possible. ` +
         text;
       const highlightResponse = await callOpenAI(modifiedText);
 
