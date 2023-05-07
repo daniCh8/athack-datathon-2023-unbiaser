@@ -77,8 +77,8 @@ To use GPT-3.5 for text generation, you'll need an OpenAI API key. You should se
 You can set up your own local environment by creating a `.env.local` file and put it in the root folder of the project. Below is an example of the local environment file:
 
 ```bash
-REACT_APP_OPENAI_KEY = <your-openai-key>
-REACT_APP_AWS_ENDPOINT = <your-aws-endpoint>
+REACT_APP_OPENAI_KEY = "<your-openai-key>"
+REACT_APP_AWS_ENDPOINT = "<your-aws-endpoint>"
 ```
 
 ### Start the development server
