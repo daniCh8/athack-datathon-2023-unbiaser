@@ -32,7 +32,7 @@ const ResultContainer = styled.div`
   align-items: center;
 `;
 
-const Spacer = styled.div`height: 40px;`;
+const Spacer = styled.div`height: 30px;`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -65,6 +65,14 @@ function App() {
   const [genderBias, setGenderBias] = useState(null);
   const [highlightedText, setHighlightedText] = useState(null);
   const [flan, setFlan] = useState(false);
+
+  const handleFlanClick = () => {
+    setFlan(true);
+  };
+
+  const handleGptClick = () => {
+    setFlan(false);
+  };
 
   const findIfRaciallyBiased = async () => {
     return new Promise(async resolve => {
@@ -122,7 +130,7 @@ function App() {
     return new Promise(async resolve => {
       console.log(`handling ${biasType} bias with gpt.`);
       const modifiedText =
-        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response should only be a javascript parsable list, and no additional text. Each entry of the list should be a part of the text as little as possible. ` +
+        `Return a list of the specific parts of the text that contain ${biasType} bias. Your response must be a javascript parsable list, and no additional text. Each entry of the list should be an exact piece of the text as little as possible. ` +
         text;
       const highlightResponse = await callOpenAI(modifiedText);
 
@@ -331,8 +339,7 @@ function App() {
       setHighlightedText(thisHighlightedText)
 
       if (
-        !flan ||
-        (!isRaciallyBiased && !isEthnicallyBiased && !isGenderBiased)
+        !flan && (isRaciallyBiased || isEthnicallyBiased || isGenderBiased)
       ) {
         console.log("flan: " + flan);
         if (flan) {
@@ -403,9 +410,21 @@ function App() {
             {result}
           </ResultBox>
         </ResultContainer>}
-      <StyledTextButton onClick={() => setFlan(!flan)}>
-        {flan ? "GPT-3.5" : "Flan"}
-      </StyledTextButton>
+        <Spacer />
+        <div>
+        <StyledTextButton
+          onClick={handleGptClick}
+          style={{ fontWeight: flan ? "normal" : "bold" }}
+        >
+          GPT-3.5
+        </StyledTextButton>
+        <StyledTextButton
+          onClick={handleFlanClick}
+          style={{ fontWeight: flan ? "bold" : "normal" }}
+        >
+          Flan
+        </StyledTextButton>
+      </div>
     </Container>
   );
 }
