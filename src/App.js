@@ -377,7 +377,7 @@ function App() {
       <img
         src={logo}
         alt="Hack The Bias Logo"
-        style={{ width: "100%", maxWidth: "400px", height: "auto" }}
+        style={{ width: "80vw", maxWidth: "400px", height: "auto" }}
       />
       <Spacer />
       <InputBox value={text} onChange={handleTextChange} />
