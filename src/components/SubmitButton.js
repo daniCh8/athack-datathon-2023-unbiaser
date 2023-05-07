@@ -25,7 +25,7 @@ const StyledButton = styled.button`
 `;
 
 const SubmitButton = ({ onClick, disabled }) => {
-  return <StyledButton onClick={onClick} disabled={disabled}>Debias</StyledButton>;
+  return <StyledButton onClick={onClick} disabled={disabled}>Unbias</StyledButton>;
 };
 
 export default SubmitButton;
