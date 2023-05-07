@@ -29,8 +29,8 @@ To get started with the project, follow the instructions below.
 
 Ensure you have the following installed on your local machine:
 
-- Node.js (version 14.x or later)
-- npm (version 6.x or later)
+- Node.js (version 20.1.0 or later)
+- npm (version 9.6 or later)
 - Git
 
 ### Installation
