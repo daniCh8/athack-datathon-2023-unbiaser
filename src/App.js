@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "@emotion/styled";
 import InputBox from "./components/InputBox";
@@ -7,7 +7,7 @@ import ResultBox from "./components/ResultBox";
 import ResetButton from "./components/ResetButton";
 import StatusCircle from "./components/StatusCircle";
 import logo from "./assets/logo.png";
-import LinearProgress from '@mui/material/LinearProgress';
+import LoadingBar from "./components/LoadingBar";
 
 const Container = styled.div`
   display: flex;
@@ -68,6 +68,7 @@ function App() {
   const [highlightedText, setHighlightedText] = useState(null);
   const [flan, setFlan] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   const onClear = () => {
     setResult(null);
@@ -239,7 +240,7 @@ function App() {
 
       const headers = {
         "Content-Type": "application/json",
-        Authorization: "Bearer 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",
+        "Authorization": `Bearer ${"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"}`,
       };
 
       const data = {
@@ -290,17 +291,21 @@ function App() {
 
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       let thisText = text;
       let thisHighlightedText = text;
 
       const isRaciallyBiased = await findIfRaciallyBiased();
       setRacialBias(isRaciallyBiased);
+      setLoadingProgress(15);
 
       const isEthnicallyBiased = await findIfEthnicallyBiased();
       setEthnicBias(isEthnicallyBiased);
+      setLoadingProgress(30);
 
       const isGenderBiased = await findIfGenderBiased();
       setGenderBias(isGenderBiased);
+      setLoadingProgress(45);
 
       if (isRaciallyBiased) {
         if (flan) {
@@ -320,6 +325,7 @@ function App() {
         }
         console.log("this highlighted text: " + thisHighlightedText);
       }
+      setLoadingProgress(60);
       if (isEthnicallyBiased) {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
@@ -338,6 +344,7 @@ function App() {
         }
         console.log("this highlighted text: " + thisHighlightedText);
       }
+      setLoadingProgress(75);
       if (isGenderBiased) {
         if (flan) {
           const { newText, newHighlightedText } = await handleBias(
@@ -356,6 +363,7 @@ function App() {
         }
         console.log("this highlighted text: " + thisHighlightedText);
       }
+      setLoadingProgress(90);
       console.log("this highlighted text: " + thisHighlightedText);
       setHighlightedText(thisHighlightedText);
 
@@ -369,22 +377,22 @@ function App() {
         console.log(response);
       }
       setResult(thisText);
+      setLoadingProgress(100)
+      setLoading(false)
     } catch (error) {
       console.error("Error submitting text:", error);
     }
   };
 
-  const handleSubmitLoader = async () => {
-    setLoading(true);
-
-    try {
-      await handleSubmit();
-    } catch (error) {
-      console.error('Error occurred during the handleSubmit() method:', error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (loading) {
+      // Show the loading bar
+      setLoadingProgress(0);
+    } else {
+      // Hide the loading bar
+      setLoadingProgress(0);
     }
-  };
+  }, [loading]);
 
   return (
     <Container>
@@ -396,11 +404,11 @@ function App() {
       <Spacer />
       <InputBox value={text} onChange={handleTextChange} />
       <ButtonContainer>
-        <SubmitButton onClick={handleSubmitLoader} disabled={!text || result} />
+        <SubmitButton onClick={handleSubmit} disabled={!text || result} />
         <ResetButton onClick={onClear} disabled={!result} />
       </ButtonContainer>
       <Spacer />
-      {loading && <LinearProgress />}
+      {loading && <LoadingBar progress={loadingProgress} />}
       {result &&
         <ResultContainer>
           <CircleContainer>
