@@ -100,9 +100,9 @@ function App() {
         ? await makeAWSApiCall(modifiedRacialBiasText, 80, 1, 20, 0.95, true, 5)
         : await callOpenAI(modifiedRacialBiasText);
       const isRaciallyBiased = flan
-        ? racialBiasResponse.data[0] === "yes"
+        ? racialBiasResponse.data[0].generated_text === "yes"
         : racialBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? racialBiasResponse.data[0] : racialBiasResponse);
+      console.log(flan ? racialBiasResponse.data[0].generated_text : racialBiasResponse);
       console.log("is racially biased? " + isRaciallyBiased);
 
       resolve(isRaciallyBiased);
@@ -117,9 +117,9 @@ function App() {
         ? await makeAWSApiCall(modifiedEthnicBiasText, 80, 1, 20, 0.95, true, 5)
         : await callOpenAI(modifiedEthnicBiasText);
       const isEthnicallyBiased = flan
-        ? ethnicBiasResponse.data[0] === "yes"
+        ? ethnicBiasResponse.data[0].generated_text === "yes"
         : ethnicBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? ethnicBiasResponse.data[0] : ethnicBiasResponse);
+      console.log(flan ? ethnicBiasResponse.data[0].generated_text : ethnicBiasResponse);
       console.log("is ethnically biased? " + isEthnicallyBiased);
 
       resolve(isEthnicallyBiased);
@@ -134,9 +134,9 @@ function App() {
         ? await makeAWSApiCall(modifiedGenderBiasText, 80, 1, 20, 0.95, true, 5)
         : await callOpenAI(modifiedGenderBiasText);
       const isGenderBiased = flan
-        ? genderBiasResponse.data[0] === "yes"
+        ? genderBiasResponse.data[0].generated_text === "yes"
         : genderBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? genderBiasResponse.data[0] : genderBiasResponse);
+      console.log(flan ? genderBiasResponse.data[0].generated_text : genderBiasResponse);
       console.log("is gender biased? " + isGenderBiased);
 
       resolve(isGenderBiased);
@@ -184,7 +184,7 @@ function App() {
         true,
         5
       );
-      let newText = response.data[0];
+      let newText = response.data[0].generated_text;
 
       const highlightResponseText =
         `can you highlight where there is ${biasType} bias on this sentence? ` +
@@ -200,7 +200,7 @@ function App() {
       );
       const newHighlightedText = highlightSentences(
         thisHighlightedText,
-        [highlightResponse.data[0]],
+        [highlightResponse.data[0].generated_text],
         `highlighted-${biasType}-bias`
       );
 
@@ -220,7 +220,7 @@ function App() {
     const axiosRequestUrl =
       `${process.env.REACT_APP_AWS_ENDPOINT}`;
     const requestData = {
-      text_inputs: textInputs,
+      inputs: textInputs,
       max_length: maxLength,
       num_return_sequences: numReturnSequences,
       top_k: topK,
