@@ -3,6 +3,7 @@
 Welcome to the Hack The Bias repository! This project was created for the Datadays 2023 AI Hackathon, organized by the Analytics Club at ETH. Our goal is to help users identify and remove biases from their text in order to promote fair and inclusive language. By providing your text, our website generates a new version that is free from racial, ethnical, and gender biases. Additionally, it highlights the specific parts of your input text related to each category of bias.
 
 ## Table of Contents
+
 - [Features](#features)
 - [Video Demo](#video-demo)
   - [Mobile](#mobile)
@@ -21,6 +22,10 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 - [Built With](#built-with)
 
 ## Video Demo
+
+### Text Used In Demo
+
+Introducing the all-new XYZ Sports Coupe - a high-performance machine that combines luxury, power, and cutting-edge technology. This beast of a car is designed to satisfy the desires of the modern man who craves speed, dominance, and style. With its sleek exterior, aggressive engine, and advanced features, the XYZ Sports Coupe will make you feel like the king of the road. Don't settle for less - experience the thrill of driving the ultimate sports car for the modern man.
 
 ### Mobile
 
@@ -65,10 +70,10 @@ cd athack-datathon-2023-web-app
 ```
 
 3. Install dependencies:
+
 ```bash
 npm install
 ```
-
 
 ## Usage
 
@@ -103,6 +108,7 @@ The [evaulation_notebook.ipynb](/scripts/evaluation_notebook.ipynb) contains cod
 
 Notebook overview:
 The `ModelValidation` class performs the following tasks:
+
 - Reads the dataset `crows_pairs_anonymized.csv` containing sentences with biases
 - Provides methods to send queries to the `OpenAI API` or to the Flan instance on the `AWS API Gateway`
 - Methods to get a sample of sentences with gender, race, and ethnicity biases
