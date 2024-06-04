@@ -102,7 +102,9 @@ function App() {
       const isRaciallyBiased = flan
         ? racialBiasResponse.data[0].generated_text === "yes"
         : racialBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? racialBiasResponse.data[0].generated_text : racialBiasResponse);
+      console.log(
+        flan ? racialBiasResponse.data[0].generated_text : racialBiasResponse
+      );
       console.log("is racially biased? " + isRaciallyBiased);
 
       resolve(isRaciallyBiased);
@@ -119,7 +121,9 @@ function App() {
       const isEthnicallyBiased = flan
         ? ethnicBiasResponse.data[0].generated_text === "yes"
         : ethnicBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? ethnicBiasResponse.data[0].generated_text : ethnicBiasResponse);
+      console.log(
+        flan ? ethnicBiasResponse.data[0].generated_text : ethnicBiasResponse
+      );
       console.log("is ethnically biased? " + isEthnicallyBiased);
 
       resolve(isEthnicallyBiased);
@@ -136,7 +140,9 @@ function App() {
       const isGenderBiased = flan
         ? genderBiasResponse.data[0].generated_text === "yes"
         : genderBiasResponse.toLowerCase().includes("yes");
-      console.log(flan ? genderBiasResponse.data[0].generated_text : genderBiasResponse);
+      console.log(
+        flan ? genderBiasResponse.data[0].generated_text : genderBiasResponse
+      );
       console.log("is gender biased? " + isGenderBiased);
 
       resolve(isGenderBiased);
@@ -185,7 +191,7 @@ function App() {
         5
       );
       let newText = response.data[0].generated_text;
-      console.log(response)
+      console.log(response);
 
       const highlightResponseText =
         `can you highlight where there is ${biasType} bias on this sentence? ` +
@@ -218,8 +224,7 @@ function App() {
     doSample,
     numBeams
   ) => {
-    const axiosRequestUrl =
-      `${process.env.REACT_APP_AWS_ENDPOINT}`;
+    const axiosRequestUrl = `${process.env.REACT_APP_AWS_ENDPOINT}`;
     const requestData = {
       inputs: textInputs,
       max_length: maxLength,
@@ -236,29 +241,12 @@ function App() {
 
   const callOpenAI = (text) => {
     return new Promise(async (resolve, reject) => {
-      const messages = [
-        { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: text },
-      ];
-
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
-      };
-
-      const data = {
-        model: "gpt-3.5-turbo",
-        messages: messages,
-        max_tokens: 500,
-      };
-
       try {
-        const response = await axios.post(
-          "https://api.openai.com/v1/chat/completions",
-          data,
-          { headers: headers }
-        );
-        const content = response.data.choices[0].message.content;
+        const response = await axios.post("/api/openai", {
+          question: text,
+        });
+
+        const content = response.data.message.content;
         resolve(content);
       } catch (error) {
         reject(error);
@@ -441,7 +429,7 @@ function App() {
           onClick={handleGptClick}
           style={{ fontWeight: flan ? "normal" : "bold" }}
         >
-          GPT-3.5
+          GPT-4o
         </StyledTextButton>
         <StyledTextButton
           onClick={handleFlanClick}
