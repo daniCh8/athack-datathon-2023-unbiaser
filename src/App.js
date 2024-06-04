@@ -174,10 +174,10 @@ function App() {
   const handleBias = async (biasType, resText, thisHighlightedText) => {
     return new Promise(async (resolve) => {
       const modifiedText =
-        `remove the ${biasType} bias from this text: ` + resText;
+        `rephrase this sentence removing the ${biasType} bias: ` + resText;
       const response = await makeAWSApiCall(
         modifiedText,
-        120,
+        500,
         3,
         50,
         0.95,
@@ -185,6 +185,7 @@ function App() {
         5
       );
       let newText = response.data[0].generated_text;
+      console.log(response)
 
       const highlightResponseText =
         `can you highlight where there is ${biasType} bias on this sentence? ` +
