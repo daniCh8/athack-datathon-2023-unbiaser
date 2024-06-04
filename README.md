@@ -6,6 +6,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
 
 - [Features](#features)
 - [Video Demo](#video-demo)
+  - [Text Used In Demo](#text-used-in-demo)
   - [Mobile](#mobile)
   - [Desktop](#desktop)
 - [Live Demo](#live-demo)
