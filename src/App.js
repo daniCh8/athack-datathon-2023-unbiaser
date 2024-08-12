@@ -429,7 +429,7 @@ function App() {
           onClick={handleGptClick}
           style={{ fontWeight: flan ? "normal" : "bold" }}
         >
-          GPT-4o
+          GPT-4o-mini
         </StyledTextButton>
         <StyledTextButton
           onClick={handleFlanClick}
