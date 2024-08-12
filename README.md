@@ -15,7 +15,7 @@ Welcome to the Hack The Bias repository! This project was created for the Datada
   - [Installation](#installation)
 - [Usage](#usage)
   - [Flan instance on AWS SageMaker](#flan-instance-on-aws-sagemaker)
-  - [GPT-3.5 on OpenAI](#gpt-35-on-openai)
+  - [GPT-4o-mini on OpenAI](#gpt-4o-mini-on-openai)
   - [Local Environment Example](#local-environment-example)
   - [Start the development server](#start-the-development-server)
 - [Evaluation Notebook](#evaluation-notebook)
@@ -84,9 +84,9 @@ There are two alternatives for text generation: using a Flan instance deployed o
 
 We've built a pipeline using AWS Lambda and AWS API Gateway to make our Flan instance reachable from the website. To use this option, you should do the same, and provide the endpoint. Don't forget to enable CORS on the API Gateway. You should set the environment variable `REACT_APP_AWS_ENDPOINT`, as shown in line 221 of [App.js](/src/App.js).
 
-### GPT-3.5 on OpenAI
+### GPT-4o-mini on OpenAI
 
-To use GPT-3.5 for text generation, you'll need an OpenAI API key. You should set up the environment variable `REACT_APP_OPENAI_KEY` at line 245 of [App.js](/src/App.js).
+To use GPT-4o-mini for text generation, you'll need an OpenAI API key. You should set up the environment variable `REACT_APP_OPENAI_KEY` at line 245 of [App.js](/src/App.js).
 
 ### Local Environment Example
 

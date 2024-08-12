@@ -18,7 +18,7 @@ export default async function handler(req, res) {
           { role: "system", content: "You are a helpful assistant." },
           { role: "user", content: question },
         ],
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         max_tokens: 400,
         n: 1,
         temperature: 0.4,
